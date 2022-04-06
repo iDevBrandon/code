@@ -7,11 +7,17 @@ import {
   MDBRow,
   MDBCol,
   MDBContainer,
+  MDBBtnGroup,
+  MDBBtn,
 } from "mdb-react-ui-kit";
 import React, { useState, useEffect } from "react";
 
 function App() {
   const [data, setData] = useState([]);
+  const [value, setValue] = useState("");
+  const [sortValue, setSortValue] = useState("");
+
+  const sortOptions = ["name", "address", "email", "phone", "status"];
 
   useEffect(() => {
     loadUsersData();
@@ -26,10 +32,72 @@ function App() {
 
   console.log(data);
 
+  const handleReset = (e) => {
+    loadUsersData();
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    return await axios
+      .get(`http://localhost:5000/users?q=${value}`)
+      .then((response) => {
+        setData(response.data);
+        setValue("");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleSort = async (e) => {
+    let value = e.target.value;
+    setSortValue(value);
+    return await axios
+      .get(`http://localhost:5000/users?_sort=${value}&_order=asc`)
+      .then((response) => {
+        setData(response.data);
+        setValue("");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleFilter = async (value) => {
+    return await axios
+      .get(`http://localhost:5000/users?status=${value}`) 
+      .then((response) => {
+        setData(response.data);
+        setValue("");
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <MDBContainer>
+      <form
+        style={{
+          margin: "auto",
+          padding: "15px",
+          maxWidth: "400px",
+          alignContent: "center",
+        }}
+        className="d-flex input-group w-auto"
+        onSubmit={handleSearch}
+      >
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search name..."
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+
+        <MDBBtn type="submit" color="dark">
+          Search
+        </MDBBtn>
+        <MDBBtn className="mx-2" color="info" onClick={() => handleReset()}>
+          Reset
+        </MDBBtn>
+      </form>
       <div style={{ marginTop: "100px" }}>
-        <h2>Search, Filter, Sort and pagination</h2>
+        <h2 className="text-center">Search, Filter, Sort and pagination</h2>
         <MDBRow>
           <MDBCol size="12">
             <MDBTable>
@@ -69,6 +137,38 @@ function App() {
           </MDBCol>
         </MDBRow>
       </div>
+      <MDBRow>
+        <MDBCol size="8">
+          <h5>Sort by:</h5>
+          <select
+            style={{ width: "50%", borderRadius: "2px", height: "35px" }}
+            onChange={handleSort}
+            value={sortValue}
+          >
+            <option>Please select</option>
+            {sortOptions.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </MDBCol>
+        <MDBCol size="4">
+          <h5>Filter by status:</h5>
+          <MDBBtnGroup>
+            <MDBBtn color="success" onClick={() => handleFilter("Active")}>
+              Active
+            </MDBBtn>
+            <MDBBtn
+              color="danger"
+              style={{ marginLeft: "2px" }}
+              onClick={() => handleFilter("Inactive")}
+            >
+              Inactive
+            </MDBBtn>
+          </MDBBtnGroup>
+        </MDBCol>
+      </MDBRow>
     </MDBContainer>
   );
 }
