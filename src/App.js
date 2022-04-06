@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import "./App.css";
 import axios from "axios";
 import {
@@ -9,6 +10,9 @@ import {
   MDBContainer,
   MDBBtnGroup,
   MDBBtn,
+  MDBPaginationLink,
+  MDBPagination,
+  MDBPaginationItem,
 } from "mdb-react-ui-kit";
 import React, { useState, useEffect } from "react";
 
@@ -16,17 +20,22 @@ function App() {
   const [data, setData] = useState([]);
   const [value, setValue] = useState("");
   const [sortValue, setSortValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageLimit] = useState(4);
 
   const sortOptions = ["name", "address", "email", "phone", "status"];
 
   useEffect(() => {
-    loadUsersData();
+    loadUsersData(0, 4, 0);
   }, []);
 
-  const loadUsersData = async () => {
+  const loadUsersData = async (start, end, increase) => {
     return await axios
-      .get("http://localhost:5000/users")
-      .then((response) => setData(response.data))
+      .get(`http://localhost:5000/users?_start=${start}&_end=${end}`)
+      .then((response) => {
+        setData(response.data);
+        setCurrentPage(currentPage + increase);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -61,12 +70,64 @@ function App() {
 
   const handleFilter = async (value) => {
     return await axios
-      .get(`http://localhost:5000/users?status=${value}`) 
+      .get(`http://localhost:5000/users?status=${value}`)
       .then((response) => {
         setData(response.data);
         setValue("");
       })
       .catch((err) => console.log(err));
+  };
+
+  const renderPagination = () => {
+    if (currentPage === 0) {
+      return (
+        <MDBPagination>
+          <MDBPaginationItem>
+            <MDBPaginationLink>1</MDBPaginationLink>
+          </MDBPaginationItem>
+          <MDBPaginationItem>
+            <MDBBtn onClick={() => loadUsersData(4, 8, 1)}>Next</MDBBtn>
+          </MDBPaginationItem>
+        </MDBPagination>
+      );
+    } else if (currentPage < pageLimit - 1 && data.length === pageLimit) {
+      return (
+        <MDBPagination>
+          <MDBPaginationItem>
+            <MDBBtn
+              onClick={() =>
+                loadUsersData((currentPage - 1) * 4, currentPage * 4, -1)
+              }
+            >
+              Prev
+            </MDBBtn>
+          </MDBPaginationItem>
+          <MDBPaginationItem>
+            <MDBPaginationLink>{currentPage + 1}</MDBPaginationLink>
+          </MDBPaginationItem>
+          <MDBPaginationItem>
+            <MDBBtn
+              onClick={() =>
+                loadUsersData((currentPage + 1) * 4, (currentPage + 2) * 4, 1)
+              }
+            >
+              Next
+            </MDBBtn>
+          </MDBPaginationItem>
+        </MDBPagination>
+      );
+    } else {
+      return (
+        <MDBPagination>
+          <MDBPaginationItem>
+            <MDBBtn onClick={() => loadUsersData(4, 8, -1)}>Prev</MDBBtn>
+          </MDBPaginationItem>
+          <MDBPaginationItem>
+            <MDBPaginationLink>{currentPage + 1}</MDBPaginationLink>
+          </MDBPaginationItem>
+        </MDBPagination>
+      );
+    }
   };
 
   return (
@@ -136,6 +197,16 @@ function App() {
             </MDBTable>
           </MDBCol>
         </MDBRow>
+        <div
+          style={{
+            margin: "auto",
+            padding: "15px",
+            maxWidth: "250px",
+            alignContent: "center",
+          }}
+        >
+          {renderPagination()}
+        </div>
       </div>
       <MDBRow>
         <MDBCol size="8">
@@ -170,6 +241,29 @@ function App() {
         </MDBCol>
       </MDBRow>
     </MDBContainer>
+=======
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+>>>>>>> Stashed changes
   );
 }
 
