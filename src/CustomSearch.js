@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { Table } from "react-bootstrap";
 
 function CustomSearch() {
   const [userData, setUserData] = useState([]);
+  const [userSearchData, setUserSearchData] = useState([]);
+  const [name, setName] = useState("");
+
   useEffect(() => {
     const data = [
       { name: "Manoj", age: "23", profession: "SE" },
@@ -12,10 +16,40 @@ function CustomSearch() {
     ];
 
     setUserData(data);
-  });
+    setUserSearchData(data);
+  }, []);
+
+  const handleSearch = () => {
+    const newData = userData.filter((user) =>
+      user.name.toLowerCase().includes(name.toLowerCase())
+    );
+    setUserData(newData);
+  };
+
   return (
     <div>
-      <table>
+      <Table>
+        <tr>
+          <td>
+            <input
+              type="text"
+              placeholder="Enter your name..."
+              onChange={(e) => setName(e.target.value)}
+            />
+          </td>
+          <td>
+            <select>
+              <option value="">Name</option>
+              <option value="Batsman">Batsman</option>
+            </select>
+          </td>
+          <td>
+            <button onClick={() => handleSearch()}>Search</button>
+          </td>
+        </tr>
+      </Table>
+
+      <Table responsive size="sm">
         <thead>
           <tr>
             <th>Name</th>
@@ -26,7 +60,7 @@ function CustomSearch() {
         <tbody>
           {userData && userData.length > 0
             ? userData.map((item, index) => (
-                <tr>
+                <tr key={index}>
                   <td>{item.name}</td>
                   <td>{item.age}</td>
                   <td>{item.profession}</td>
@@ -34,7 +68,7 @@ function CustomSearch() {
               ))
             : "No Data Found!"}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 }
