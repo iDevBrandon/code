@@ -1,6 +1,6 @@
 import "./App.css";
 import FilteringTable from "./components/FilteringTable";
-import GlobalFilter from "./components/GlobalFilter";
+import GlobalFilter from "./components/Search";
 import SortingTable from "./components/SortingTable";
 
 function App() {

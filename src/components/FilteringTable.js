@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
-import { useTable, useGlobalFilter } from "react-table";
+import { useTable, useGlobalFilter, useSortBy } from "react-table";
 import MOCK_DATA from "./MOCK_DATA.json";
 import { COLUMNS } from "./columns";
 import "./table.css";
-import GlobalFilter from "./GlobalFilter";
+import GlobalFilter from "./Search";
+import Search from "./Search";
 
 function FilteringTable() {
   const columns = useMemo(() => COLUMNS, []);
@@ -17,25 +18,28 @@ function FilteringTable() {
     prepareRow,
     state,
     setGlobalFilter,
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useGlobalFilter
-  );
+  } = useTable({ columns, data }, useGlobalFilter, useSortBy);
 
   const { globalFilter } = state;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+      <Search filter={globalFilter} onSubmit={setGlobalFilter} />
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render("Header")}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? " 🔽"
+                        : " 🔼"
+                      : ""}
+                  </span>
+                </th>
               ))}
             </tr>
           ))}
