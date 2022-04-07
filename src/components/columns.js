@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export const COLUMNS = [
   {
     Header: "번호",
@@ -34,6 +36,9 @@ export const COLUMNS = [
   {
     Header: "최근접속일",
     accessor: "date",
+    Cell: ({ value }) => {
+      return format(new Date(value), "yyyy-MM-dd");
+    },
   },
   {
     Header: "관리",

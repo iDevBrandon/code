@@ -1,5 +1,6 @@
 import "./App.css";
 import BasicTable from "./components/BasicTable";
+import SortingTable from "./components/SortingTable";
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
           </form>
         </div>
         <div style={{ display: "flex", justifyContent: "end" }}>
-          <BasicTable />
+          {/* <BasicTable /> */}
+          <SortingTable />
         </div>
       </div>
     </div>
