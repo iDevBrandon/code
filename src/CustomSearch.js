@@ -12,7 +12,7 @@ function CustomSearch() {
       { name: "Virat", age: "19", profession: "Batsman" },
       { name: "Rohit", age: "34", profession: "one piece" },
       { name: "Shami", age: "56", profession: "Naruto" },
-      { name: "Bumrah", age: "67", profession: "Damon Slyer" },
+      { name: "Bumrah", age: "67", profession: "dell" },
     ];
 
     setUserData(data);
@@ -24,6 +24,7 @@ function CustomSearch() {
       user.name.toLowerCase().includes(name.toLowerCase())
     );
     setUserData(newData);
+    setUserSearchData(newData);
   };
 
   return (
@@ -37,10 +38,15 @@ function CustomSearch() {
               onChange={(e) => setName(e.target.value)}
             />
           </td>
+
           <td>
             <select>
               <option value="">Name</option>
-              <option value="Batsman">Batsman</option>
+              <option value="batsman">Batsman</option>
+              <option value="se">SE</option>
+              <option value="one_piece">one piece</option>
+              <option value="naruto">Naruto</option>
+              <option value="dell">dell</option>
             </select>
           </td>
           <td>
@@ -58,8 +64,8 @@ function CustomSearch() {
           </tr>
         </thead>
         <tbody>
-          {userData && userData.length > 0
-            ? userData.map((item, index) => (
+          {userSearchData && userSearchData.length > 0
+            ? userSearchData.map((item, index) => (
                 <tr key={index}>
                   <td>{item.name}</td>
                   <td>{item.age}</td>
