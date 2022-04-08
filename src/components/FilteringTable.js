@@ -22,6 +22,8 @@ function FilteringTable() {
 
   const { globalFilter } = state;
 
+  // console.log(rows);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
       <Search filter={globalFilter} onSubmit={setGlobalFilter} />
@@ -47,6 +49,9 @@ function FilteringTable() {
         <tbody {...getTableBodyProps()}>
           {rows.map((row) => {
             prepareRow(row);
+
+            console.log(row);
+
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
